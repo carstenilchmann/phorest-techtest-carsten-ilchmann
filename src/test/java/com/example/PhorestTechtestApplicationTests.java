@@ -129,5 +129,17 @@ class PhorestTechtestApplicationTests {
 		assertEquals(HttpStatus.NOT_FOUND, clientsResponse.getStatusCode());
 	}
 
+	@Test
+	void badClientPost() {
+		URI uri = restTemplate.postForLocation("http://localhost:" + port + "/client", "garbage");
+		assertNull(uri);
+	}
+
+	@Test
+	void badCsvImportPostMissingTypeAndFile() {
+		ResponseEntity<Void> response = restTemplate.postForEntity("http://localhost:" + port + "/import_csv", null, Void.class);
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	}
+
 }
 

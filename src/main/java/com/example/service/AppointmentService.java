@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.model.Appointment;
 import com.example.model.Client;
@@ -19,6 +20,7 @@ import com.example.repository.AppointmentRepository;
 import com.example.util.CsvUtils;
 
 @Service
+@Transactional
 public class AppointmentService {
 	private static Logger logger = LoggerFactory.getLogger(AppointmentService.class);
 
