@@ -12,32 +12,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.service.ImportService;
+import com.example.service.AppointmentService;
+import com.example.service.ClientService;
+import com.example.service.PurchaseService;
+import com.example.service.ServiceService;
 
 @RestController
 public class CsvImportController {
 	private static Logger logger = LoggerFactory.getLogger(CsvImportController.class);
 
 	@Autowired
-	private ImportService importService;
+	private ClientService clientService;
+
+	@Autowired
+	private AppointmentService appointmentService;
+
+	@Autowired
+	private ServiceService serviceService;
+
+	@Autowired
+	private PurchaseService purchaseService;
 
 	@PostMapping("/import_csv")
 	public ResponseEntity<Void> importCsv(@RequestParam(value = "type") ImportType type,
 			                              @RequestParam(value = "data") MultipartFile file) throws IOException, ParseException {
-		logger.info("importing CSV");
+		logger.info("Importing CSV");
 		logger.info("type: " + type);
 		switch (type) {
 		case CLIENT:
-			importService.importClients(file.getInputStream());
+			clientService.importClients(file.getInputStream());
 			break;
 		case APPOINTMENT:
-			importService.importAppointments(file.getInputStream());
+			appointmentService.importAppointments(file.getInputStream());
 			break;
 		case SERVICE:
-			importService.importServices(file.getInputStream());
+			serviceService.importServices(file.getInputStream());
 			break;
 		case PURCHASE:
-			importService.importPurchases(file.getInputStream());
+			purchaseService.importPurchases(file.getInputStream());
 		}
 		return ResponseEntity.noContent().build();
 	}
