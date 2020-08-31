@@ -9,7 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CsvUtils {
+public final class CsvUtils {
+	private CsvUtils() {
+	}
+
 	public static List<Map<String, String>> parseCsv(InputStream stream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		List<Map<String, String>> rows = new ArrayList<>();

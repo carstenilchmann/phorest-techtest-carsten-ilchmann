@@ -6,3 +6,4 @@
 - add missing CRUD methods for Appointment, Service, and Purchase
 - add integration tests for above
 - look at using batch inserts for the csv upload
+- make CSV parser more robust, support quoting

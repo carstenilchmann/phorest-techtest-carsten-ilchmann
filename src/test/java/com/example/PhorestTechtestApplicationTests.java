@@ -3,6 +3,10 @@ package com.example;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.UUID;
 
@@ -12,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -139,6 +144,30 @@ class PhorestTechtestApplicationTests {
 	void badCsvImportPostMissingTypeAndFile() {
 		ResponseEntity<Void> response = restTemplate.postForEntity("http://localhost:" + port + "/import_csv", null, Void.class);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	}
+
+	@Test
+	void badCsvImportPostUnknownType() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		ClassPathResource inputFile = new ClassPathResource("clients.csv");
+		body.add("data", inputFile);
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+		ResponseEntity<Void> response = restTemplate.postForEntity("http://localhost:" + port + "/import_csv?type=unknown", requestEntity, Void.class);
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	}
+
+	@Test
+	void badCsvImportMissingParentEntity() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		ClassPathResource inputFile = new ClassPathResource("purchases_missing_parent.csv");
+		body.add("data", inputFile);
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+		ResponseEntity<Void> response = restTemplate.postForEntity("http://localhost:" + port + "/import_csv?type=purchase", requestEntity, Void.class);
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 
 }

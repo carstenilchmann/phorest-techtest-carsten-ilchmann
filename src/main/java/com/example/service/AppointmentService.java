@@ -22,7 +22,7 @@ import com.example.util.CsvUtils;
 @Service
 @Transactional
 public class AppointmentService {
-	private static Logger logger = LoggerFactory.getLogger(AppointmentService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppointmentService.class);
 
 	@Autowired
 	private AppointmentRepository appointmentRepo;
@@ -43,7 +43,9 @@ public class AppointmentService {
 			appointment.setClient(new Client(UUID.fromString(row.get("client_id"))));
 			appointment.setStartTime(sdf.parse(row.get("start_time")));
 			appointment.setEndTime(sdf.parse(row.get("end_time")));
-			logger.debug("Saving appointment: " + appointment.getId());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Saving appointment: " + appointment.getId());
+			}
 			appointmentRepo.save(appointment);
 		}
 	}

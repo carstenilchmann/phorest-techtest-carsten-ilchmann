@@ -19,7 +19,7 @@ import com.example.service.ServiceService;
 
 @RestController
 public class CsvImportController {
-	private static Logger logger = LoggerFactory.getLogger(CsvImportController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CsvImportController.class);
 
 	@Autowired
 	private ClientService clientService;
@@ -34,22 +34,21 @@ public class CsvImportController {
 	private PurchaseService purchaseService;
 
 	@PostMapping("/import_csv")
-	public ResponseEntity<Void> importCsv(@RequestParam(value = "type") ImportType type,
-			                              @RequestParam(value = "data") MultipartFile file) throws IOException, ParseException {
-		logger.info("Importing CSV");
-		logger.info("type: " + type);
+	public ResponseEntity<Void> importCsv(@RequestParam ImportType type,
+			                              @RequestParam MultipartFile data) throws IOException, ParseException {
+		LOGGER.info("Importing CSV of type: " + type);
 		switch (type) {
 		case CLIENT:
-			clientService.importClients(file.getInputStream());
+			clientService.importClients(data.getInputStream());
 			break;
 		case APPOINTMENT:
-			appointmentService.importAppointments(file.getInputStream());
+			appointmentService.importAppointments(data.getInputStream());
 			break;
 		case SERVICE:
-			serviceService.importServices(file.getInputStream());
+			serviceService.importServices(data.getInputStream());
 			break;
 		case PURCHASE:
-			purchaseService.importPurchases(file.getInputStream());
+			purchaseService.importPurchases(data.getInputStream());
 		}
 		return ResponseEntity.noContent().build();
 	}

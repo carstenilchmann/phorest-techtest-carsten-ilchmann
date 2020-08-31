@@ -21,7 +21,7 @@ import com.example.util.CsvUtils;
 @Service
 @Transactional
 public class PurchaseService {
-	private static Logger logger = LoggerFactory.getLogger(PurchaseService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PurchaseService.class);
 
 	@Autowired
 	private PurchaseRepository purchaseRepo;
@@ -43,7 +43,9 @@ public class PurchaseService {
 			purchase.setName(row.get("name"));
 			purchase.setPrice(new BigDecimal(row.get("price")));
 			purchase.setLoyaltyPoints(Integer.valueOf(row.get("loyalty_points")));
-			logger.debug("Saving purchase: " + purchase.getId());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Saving purchase: " + purchase.getId());
+			}
 			purchaseRepo.save(purchase);
 		}
 	}

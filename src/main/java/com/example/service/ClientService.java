@@ -22,7 +22,7 @@ import com.example.util.CsvUtils;
 @Service
 @Transactional
 public class ClientService {
-	private static Logger logger = LoggerFactory.getLogger(ClientService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientService.class);
 
 	@Autowired
 	private ClientRepository clientRepo;
@@ -65,7 +65,9 @@ public class ClientService {
 			client.setPhone(row.get("phone"));
 			client.setGender(row.get("gender"));
 			client.setBanned(Boolean.valueOf(row.get("banned")));
-			logger.debug("Saving client: " + client.getId());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Saving client: " + client.getId());
+			}
 			clientRepo.save(client);
 		}
 	}

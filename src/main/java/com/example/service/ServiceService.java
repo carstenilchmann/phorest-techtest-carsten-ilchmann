@@ -20,7 +20,7 @@ import com.example.util.CsvUtils;
 @org.springframework.stereotype.Service
 @Transactional
 public class ServiceService {
-	private static Logger logger = LoggerFactory.getLogger(ServiceService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceService.class);
 
 	@Autowired
 	private ServiceRepository serviceRepo;
@@ -42,7 +42,9 @@ public class ServiceService {
 			service.setName(row.get("name"));
 			service.setPrice(new BigDecimal(row.get("price")));
 			service.setLoyaltyPoints(Integer.valueOf(row.get("loyalty_points")));
-			logger.debug("Saving service: " + service.getId());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Saving service: " + service.getId());
+			}
 			serviceRepo.save(service);
 		}
 	}
